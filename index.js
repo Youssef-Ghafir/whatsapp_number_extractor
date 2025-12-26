@@ -13,14 +13,8 @@ function extractAllWhatsappNumbers() {
   const extractNumbersFromItems = () => {
     const items = containerDivNumbers.querySelectorAll('div._ak72');
     items.forEach(e => {
-      const spans = e.querySelectorAll('span');
-      if (spans.length === 0) return;
-
-      const result =
-        spans[0].className === ''
-          ? spans[1]?.getAttribute('title')
-          : spans[0]?.getAttribute('title');
-
+      const textContentPhone = e.querySelector('._ak8l._ap1_').textContent;
+      const result = extractPhoneNumberPattern(textContentPhone);
       if (result) {
         numbersPhoneSet.add(result);
         console.log('Found number:', result);
@@ -51,4 +45,9 @@ function extractAllWhatsappNumbers() {
   scrollAndExtract();
 
   return numbersPhoneSet;
+}
+function extractPhoneNumberPattern(text) {
+  const regex = /(\+?\d[\d\s\-\.]{7,}\d)/;
+  const match = text.match(regex);
+  return match ? match[1].replace(/[^\d+]/g, '') : null;
 }
